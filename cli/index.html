@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Rolagem do ROG</title>
+
+    <!-- ESSENCIAL para celular -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="container">
+        <h1>Rolagem do ROG</h1>
+
+        <label for="pericia">Valor do teste</label>
+        <input type="number" id="pericia" min="1" max="20">
+
+        <label for="dado">Resultado do dado </label>
+        <input type="number" id="dado" min="1" max="20">
+
+        <button onclick="verResultado()">Ver Resultado</button>
+
+        <p id="resultado"></p>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
