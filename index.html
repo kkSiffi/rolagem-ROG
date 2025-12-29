@@ -2,29 +2,86 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Rolagem do ROG</title>
-
-    <!-- ESSENCIAL para celular -->
+    <title>RPG</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <main class="container">
-        <h1>Rolagem do ROG</h1>
+<section id="login">
+    <h2>Login</h2>
+    <input id="usuario" placeholder="Usuário">
+    <input id="senha" type="password" placeholder="Senha">
+    <button id="btnLogin">Entrar / Criar</button>
+    <p id="loginErro"></p>
+</section>
 
-        <label for="pericia">Valor do teste</label>
-        <input type="number" id="pericia" min="1" max="20">
+<section id="ficha" class="oculto">
+    <h2 id="nomePersonagem"></h2>
 
-        <label for="dado">Resultado do dado </label>
-        <input type="number" id="dado" min="1" max="20">
+    <div class="perfil">
+        <img id="foto">
+        <input type="file" id="inputFoto" accept="image/*">
+    </div>
 
-        <button onclick="verResultado()">Ver Resultado</button>
+    <!-- VIDA -->
+    <div class="status">
+        <label>Vida</label>
+        <div class="barra-container">
+            <div class="barra vida" id="barraVida"></div>
+        </div>
+        <input id="vidaAtual" type="number" class="input-mini"> /
+        <input id="vidaMax" type="number" class="input-mini">
+    </div>
 
-        <p id="resultado"></p>
-    </main>
+    <!-- SANIDADE -->
+    <div class="status">
+        <label>Sanidade</label>
+        <div class="barra-container">
+            <div class="barra sanidade" id="barraSanidade"></div>
+        </div>
+        <input id="sanidadeAtual" type="number" class="input-mini"> /
+        <input id="sanidadeMax" type="number" class="input-mini">
+    </div>
 
-    <script src="script.js"></script>
+    <h3>Atributos</h3>
+
+    <div class="atributos">
+        <div><span>Acrobacia</span><input id="attr-acrobacia" type="number" class="input-mini"><button onclick="rolarAtributo('acrobacia')">🎲</button></div>
+        <div><span>Briga</span><input id="attr-briga" type="number" class="input-mini"><button onclick="rolarAtributo('briga')">🎲</button></div>
+        <div><span>Charme</span><input id="attr-charme" type="number" class="input-mini"><button onclick="rolarAtributo('charme')">🎲</button></div>
+        <div><span>Corte Rápido</span><input id="attr-corte" type="number" class="input-mini"><button onclick="rolarAtributo('corte')">🎲</button></div>
+        <div><span>Duro na Queda</span><input id="attr-duro" type="number" class="input-mini"><button onclick="rolarAtributo('duro')">🎲</button></div>
+        <div><span>Encontrar</span><input id="attr-encontrar" type="number" class="input-mini"><button onclick="rolarAtributo('encontrar')">🎲</button></div>
+        <div><span>Escola</span><input id="attr-escola" type="number" class="input-mini"><button onclick="rolarAtributo('escola')">🎲</button></div>
+        <div><span>Esconder</span><input id="attr-esconder" type="number" class="input-mini"><button onclick="rolarAtributo('esconder')">🎲</button></div>
+        <div><span>Esperteza</span><input id="attr-esperteza" type="number" class="input-mini"><button onclick="rolarAtributo('esperteza')">🎲</button></div>
+        <div><span>Estilo</span><input id="attr-estilo" type="number" class="input-mini"><button onclick="rolarAtributo('estilo')">🎲</button></div>
+        <div><span>Força</span><input id="attr-forca" type="number" class="input-mini"><button onclick="rolarAtributo('forca')">🎲</button></div>
+        <div><span>Habilidade</span><input id="attr-habilidade" type="number" class="input-mini"><button onclick="rolarAtributo('habilidade')">🎲</button></div>
+        <div><span>Intuição</span><input id="attr-intuicao" type="number" class="input-mini"><button onclick="rolarAtributo('intuicao')">🎲</button></div>
+        <div><span>Malandragem</span><input id="attr-malandragem" type="number" class="input-mini"><button onclick="rolarAtributo('malandragem')">🎲</button></div>
+        <div><span>Medicina</span><input id="attr-medicina" type="number" class="input-mini"><button onclick="rolarAtributo('medicina')">🎲</button></div>
+        <div><span>Pilantragem</span><input id="attr-pilantragem" type="number" class="input-mini"><button onclick="rolarAtributo('pilantragem')">🎲</button></div>
+        <div><span>Piloto de Fuga</span><input id="attr-piloto" type="number" class="input-mini"><button onclick="rolarAtributo('piloto')">🎲</button></div>
+        <div><span>Poder</span><input id="attr-poder" type="number" class="input-mini"><button onclick="rolarAtributo('poder')">🎲</button></div>
+        <div><span>Sabixão</span><input id="attr-sabixao" type="number" class="input-mini"><button onclick="rolarAtributo('sabixao')">🎲</button></div>
+        <div><span>Sorte</span><input id="attr-sorte" type="number" class="input-mini"><button onclick="rolarAtributo('sorte')">🎲</button></div>
+        <div><span>Tiro</span><input id="attr-tiro" type="number" class="input-mini"><button onclick="rolarAtributo('tiro')">🎲</button></div>
+    </div>
+</section>
+
+<section id="rolagem" class="oculto">
+    <h2>Rolagem</h2>
+    <label>Perícia</label>
+    <input id="pericia" type="number" class="input-mini">
+    <label>Dado</label>
+    <input id="dado" type="number" class="input-mini">
+    <button onclick="rolar()">Rolar</button>
+    <h3 id="resultado"></h3>
+    <button onclick="trocarTela('ficha')">Voltar</button>
+</section>
+
+<script src="script.js"></script>
 </body>
 </html>

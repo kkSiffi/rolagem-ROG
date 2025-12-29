@@ -1,14 +1,15 @@
+// ===== TABELA OFICIAL =====
 const tabela = {
     1:  { normal: 20, bom: null, critico: null },
     2:  { normal: 19, bom: 20, critico: null },
     3:  { normal: 18, bom: 20, critico: null },
     4:  { normal: 17, bom: 19, critico: null },
-    5:  { normal: 15, bom: 19, critico: 20 },
+    5:  { normal: 16, bom: 19, critico: 20 },
     6:  { normal: 15, bom: 18, critico: 20 },
     7:  { normal: 14, bom: 18, critico: 20 },
     8:  { normal: 13, bom: 17, critico: 20 },
     9:  { normal: 12, bom: 17, critico: 20 },
-    10: { normal: 11, bom: 15, critico: 19 },
+    10: { normal: 11, bom: 16, critico: 19 },
     11: { normal: 10, bom: 16, critico: 19 },
     12: { normal: 9,  bom: 15, critico: 19 },
     13: { normal: 8,  bom: 15, critico: 19 },
@@ -21,28 +22,110 @@ const tabela = {
     20: { normal: 1,  bom: 11, critico: 17 }
 };
 
-function verResultado() {
-    const pericia = Number(document.getElementById("pericia").value);
-    const dado = Number(document.getElementById("dado").value);
-    const resultado = document.getElementById("resultado");
+// ===== LOGIN =====
+btnLogin.onclick = loginUsuario;
+inputFoto.onchange = trocarFoto;
 
-    if (pericia < 1 || pericia > 20 || dado < 1 || dado > 20) {
-        resultado.innerText = "❗ Valores inválidos (1 a 20)";
+document.querySelectorAll(".atributos input").forEach(i =>
+    i.oninput = salvarFicha
+);
+
+[vidaAtual, vidaMax, sanidadeAtual, sanidadeMax].forEach(i =>
+    i.oninput = atualizarBarras
+);
+
+function loginUsuario() {
+    if (!usuario.value || !senha.value) return;
+
+    let contas = JSON.parse(localStorage.getItem("contas")) || {};
+    if (!contas[usuario.value]) contas[usuario.value] = senha.value;
+    else if (contas[usuario.value] !== senha.value) return;
+
+    localStorage.setItem("contas", JSON.stringify(contas));
+    localStorage.setItem("usuarioAtual", usuario.value);
+
+    nomePersonagem.innerText = usuario.value;
+    trocarTela("ficha");
+    carregarFicha();
+}
+
+// ===== FICHA =====
+function carregarFicha() {
+    const user = localStorage.getItem("usuarioAtual");
+    const dados = JSON.parse(localStorage.getItem("ficha_" + user)) || {};
+
+    Object.keys(dados).forEach(id => {
+        if (document.getElementById(id))
+            document.getElementById(id).value = dados[id];
+    });
+
+    foto.src = dados.foto || "";
+    if (foto.src) inputFoto.style.display = "none";
+
+    atualizarBarras();
+}
+
+function salvarFicha() {
+    const user = localStorage.getItem("usuarioAtual");
+    let dados = {};
+
+    document.querySelectorAll("input").forEach(i => {
+        if (i.id) dados[i.id] = i.value;
+    });
+
+    dados.foto = foto.src;
+    localStorage.setItem("ficha_" + user, JSON.stringify(dados));
+}
+
+function atualizarBarras() {
+    barraVida.style.width = (vidaAtual.value / vidaMax.value) * 100 + "%";
+    barraSanidade.style.width = (sanidadeAtual.value / sanidadeMax.value) * 100 + "%";
+    salvarFicha();
+}
+
+function trocarFoto(e) {
+    const reader = new FileReader();
+    reader.onload = () => {
+        foto.src = reader.result;
+        inputFoto.style.display = "none";
+        salvarFicha();
+    };
+    reader.readAsDataURL(e.target.files[0]);
+}
+
+// ===== ATRIBUTO → ROLAGEM =====
+function rolarAtributo(nome) {
+    pericia.value = document.getElementById("attr-" + nome).value;
+    dado.value = "";
+    resultado.innerText = "";
+    trocarTela("rolagem");
+}
+
+// ===== ROLAGEM (100% FIEL À TABELA) =====
+function rolar() {
+    const p = Number(pericia.value);
+    const d = Number(dado.value);
+    const regra = tabela[p];
+
+    if (!regra) {
+        resultado.innerText = "Perícia inválida";
         return;
     }
 
-    const { normal, bom, critico } = tabela[pericia];
+    if (regra.critico && d >= regra.critico)
+        resultado.innerText = "TOME CRÍTICO NOS BEISO";
+    else if (regra.bom && d >= regra.bom)
+        resultado.innerText = "Óia só, foi bom";
+    else if (d >= regra.normal)
+        resultado.innerText = "Eeeeeeeeh sucesso normal";
+    else
+        resultado.innerText = "fracasso.";
+}
 
-    if (critico !== null && dado >= critico) {
-        resultado.innerText = "POIS TOME SUCESSO CRÍTICO";
-    }
-    else if (bom !== null && dado >= bom) {
-        resultado.innerText = "oloco, sucesso bom";
-    }
-    else if (dado >= normal) {
-        resultado.innerText = "Óia, foi sucesso normal";
-    }
-    else {
-        resultado.innerText = "Eeeeeh... Fracasso";
-    }
+// ===== TELAS =====
+function trocarTela(t) {
+    login.classList.add("oculto");
+    ficha.classList.add("oculto");
+    rolagem.classList.add("oculto");
+    document.getElementById(t).classList.remove("oculto");
 }
