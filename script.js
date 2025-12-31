@@ -131,5 +131,25 @@ function trocarTela(t) {
     document.addEventListener("change", function (e) {
   if (e.target && e.target.id === "inputFoto") {
     salvarFoto(e);
-  }
-});
+  function salvarFoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const ficha = JSON.parse(
+      localStorage.getItem("ficha_" + usuarioAtual)
+    );
+
+    ficha.foto = reader.result;
+    localStorage.setItem(
+      "ficha_" + usuarioAtual,
+      JSON.stringify(ficha)
+    );
+
+    // atualiza só a imagem
+    document.getElementById("fotoPerfil").src = reader.result;
+  };
+
+  reader.readAsDataURL(file);
+}
