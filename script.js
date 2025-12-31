@@ -131,7 +131,13 @@ document.addEventListener("change", e => {
 /* ---------- ROLAGEM ---------- */
 function usarAtributo(valor) {
   pericia.value = valor;
+
+  // rola o dado automaticamente (1–20)
+  const dadoRolado = Math.floor(Math.random() * 20) + 1;
+  dado.value = dadoRolado;
+
   mostrarTela(telaRolagem);
+  rolar(); // já calcula o resultado
 }
 
 function rolar() {
