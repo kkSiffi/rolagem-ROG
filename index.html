@@ -3,25 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ficha ROG</title>
+  <title>Ficha RPG</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login">
+<!-- TELA LOGIN -->
+<div id="telaLogin">
   <h2>Login</h2>
   <input id="usuario" placeholder="Usuário">
   <input id="senha" type="password" placeholder="Senha">
   <button type="button" onclick="login()">Criar / Entrar</button>
 </div>
 
-<!-- APP -->
-<div id="app" class="hidden">
-
+<!-- TELA FICHA -->
+<div id="telaFicha" class="hidden">
   <h2 id="nomePersonagem"></h2>
 
-  <!-- PERFIL -->
   <div class="perfil">
     <label for="inputFoto">
       <img id="fotoPerfil" title="Clique para trocar a foto">
@@ -51,19 +49,23 @@
     </div>
   </div>
 
-  <!-- ATRIBUTOS -->
   <h3>Atributos</h3>
   <div id="atributos"></div>
 
-  <!-- ROLAGEM -->
-  <h3>Rolagem</h3>
-  <div class="rolagem">
-    <input id="pericia" type="number" placeholder="Perícia">
-    <input id="dado" type="number" placeholder="Dado (1-20)">
-    <button onclick="rolar()">Rolar</button>
-    <p id="resultado"></p>
-  </div>
+  <button onclick="irParaRolagem()">Ir para Rolagem 🎲</button>
+</div>
 
+<!-- TELA ROLAGEM -->
+<div id="telaRolagem" class="hidden">
+  <h3>Rolagem</h3>
+
+  <input id="pericia" type="number" placeholder="Perícia">
+  <input id="dado" type="number" placeholder="Dado (1–20)">
+  <button onclick="rolar()">Rolar</button>
+
+  <p id="resultado"></p>
+
+  <button onclick="voltarFicha()">Voltar para Ficha</button>
 </div>
 
 <script src="script.js"></script>
