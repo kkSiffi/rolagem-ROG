@@ -1,131 +1,154 @@
-// ===== TABELA OFICIAL =====
+const atributos = [
+ "Acrobacia","Briga","Charme","Corte Rápido","Duro na Queda",
+ "Encontrar","Escola","Esconder","Esperteza","Estilo",
+ "Força","Habilidade","Intuição","Malandragem","Medicina",
+ "Pilantragem","Piloto de Fuga","Poder","Sabixão","Sorte","Tiro"
+];
+
 const tabela = {
-    1:  { normal: 20, bom: null, critico: null },
-    2:  { normal: 19, bom: 20, critico: null },
-    3:  { normal: 18, bom: 20, critico: null },
-    4:  { normal: 17, bom: 19, critico: null },
-    5:  { normal: 16, bom: 19, critico: 20 },
-    6:  { normal: 15, bom: 18, critico: 20 },
-    7:  { normal: 14, bom: 18, critico: 20 },
-    8:  { normal: 13, bom: 17, critico: 20 },
-    9:  { normal: 12, bom: 17, critico: 20 },
-    10: { normal: 11, bom: 16, critico: 19 },
-    11: { normal: 10, bom: 16, critico: 19 },
-    12: { normal: 9,  bom: 15, critico: 19 },
-    13: { normal: 8,  bom: 15, critico: 19 },
-    14: { normal: 7,  bom: 14, critico: 19 },
-    15: { normal: 6,  bom: 14, critico: 18 },
-    16: { normal: 5,  bom: 13, critico: 18 },
-    17: { normal: 4,  bom: 13, critico: 18 },
-    18: { normal: 3,  bom: 12, critico: 18 },
-    19: { normal: 2,  bom: 12, critico: 18 },
-    20: { normal: 1,  bom: 11, critico: 17 }
+ 1:{normal:20},2:{normal:19,bom:20},3:{normal:18,bom:20},
+ 4:{normal:17,bom:19},5:{normal:16,bom:19,critico:20},
+ 6:{normal:15,bom:18,critico:20},7:{normal:14,bom:18,critico:20},
+ 8:{normal:13,bom:17,critico:20},9:{normal:12,bom:17,critico:20},
+ 10:{normal:11,bom:16,critico:19},11:{normal:10,bom:16,critico:19},
+ 12:{normal:9,bom:15,critico:19},13:{normal:8,bom:15,critico:19},
+ 14:{normal:7,bom:14,critico:19},15:{normal:6,bom:14,critico:18},
+ 16:{normal:5,bom:13,critico:18},17:{normal:4,bom:13,critico:18},
+ 18:{normal:3,bom:12,critico:18},19:{normal:2,bom:12,critico:18},
+ 20:{normal:1,bom:11,critico:17}
 };
 
-// ===== LOGIN =====
-btnLogin.onclick = loginUsuario;
-inputFoto.onchange = trocarFoto;
+let usuarioAtual = "";
 
-document.querySelectorAll(".atributos input").forEach(i =>
-    i.oninput = salvarFicha
-);
+/* ===== LOGIN ===== */
+function login() {
+  const u = usuario.value.trim();
+  const s = senha.value.trim();
+  if (!u || !s) return;
 
-[vidaAtual, vidaMax, sanidadeAtual, sanidadeMax].forEach(i =>
-    i.oninput = atualizarBarras
-);
+  const contas = JSON.parse(localStorage.getItem("contas")) || {};
+  if (!contas[u]) contas[u] = s;
+  else if (contas[u] !== s) {
+    erro.innerText = "Senha incorreta";
+    return;
+  }
 
-function loginUsuario() {
-    if (!usuario.value || !senha.value) return;
-
-    let contas = JSON.parse(localStorage.getItem("contas")) || {};
-    if (!contas[usuario.value]) contas[usuario.value] = senha.value;
-    else if (contas[usuario.value] !== senha.value) return;
-
-    localStorage.setItem("contas", JSON.stringify(contas));
-    localStorage.setItem("usuarioAtual", usuario.value);
-
-    nomePersonagem.innerText = usuario.value;
-    trocarTela("ficha");
-    carregarFicha();
+  localStorage.setItem("contas", JSON.stringify(contas));
+  usuarioAtual = u;
+  mostrar("ficha");
+  carregarFicha();
 }
 
-// ===== FICHA =====
+/* ===== FICHA ===== */
 function carregarFicha() {
-    const user = localStorage.getItem("usuarioAtual");
-    const dados = JSON.parse(localStorage.getItem("ficha_" + user)) || {};
+  let ficha = JSON.parse(localStorage.getItem("ficha_" + usuarioAtual));
 
-    Object.keys(dados).forEach(id => {
-        if (document.getElementById(id))
-            document.getElementById(id).value = dados[id];
-    });
-
-    foto.src = dados.foto || "";
-    if (foto.src) inputFoto.style.display = "none";
-
-    atualizarBarras();
-}
-
-function salvarFicha() {
-    const user = localStorage.getItem("usuarioAtual");
-    let dados = {};
-
-    document.querySelectorAll("input").forEach(i => {
-        if (i.id) dados[i.id] = i.value;
-    });
-
-    dados.foto = foto.src;
-    localStorage.setItem("ficha_" + user, JSON.stringify(dados));
-}
-
-function atualizarBarras() {
-    barraVida.style.width = (vidaAtual.value / vidaMax.value) * 100 + "%";
-    barraSanidade.style.width = (sanidadeAtual.value / sanidadeMax.value) * 100 + "%";
-    salvarFicha();
-}
-
-function trocarFoto(e) {
-    const reader = new FileReader();
-    reader.onload = () => {
-        foto.src = reader.result;
-        inputFoto.style.display = "none";
-        salvarFicha();
+  if (!ficha) {
+    ficha = {
+      foto: "",
+      vidaAtual: 10,
+      vidaMax: 10,
+      sanAtual: 30,
+      sanMax: 30,
+      atributos: {}
     };
-    reader.readAsDataURL(e.target.files[0]);
+    atributos.forEach(a => ficha.atributos[a] = 0);
+    localStorage.setItem("ficha_" + usuarioAtual, JSON.stringify(ficha));
+  }
+
+  let html = `
+  <div class="perfil">
+    <img id="fotoPerfil"
+      src="${ficha.foto || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}">
+
+    <input type="file" accept="image/*" onchange="salvarFoto(event)">
+    <h3>${usuarioAtual}</h3>
+  </div>
+
+  <p>Vida ${ficha.vidaAtual}/${ficha.vidaMax}</p>
+  <div class="barra-container">
+    <div class="barra vida" style="width:${(ficha.vidaAtual / ficha.vidaMax) * 100}%"></div>
+  </div>
+
+  <p>Sanidade ${ficha.sanAtual}/${ficha.sanMax}</p>
+  <div class="barra-container">
+    <div class="barra sanidade" style="width:${(ficha.sanAtual / ficha.sanMax) * 100}%"></div>
+  </div>
+
+  <h3>Atributos</h3>
+  `;
+
+  atributos.forEach(a => {
+    html += `
+    <div class="atributo">
+      ${a}
+      <input type="number" value="${ficha.atributos[a]}"
+        onchange="salvarAtributo('${a}', this.value)">
+      <button onclick="abrirRolagem(${ficha.atributos[a]})">🎲</button>
+    </div>`;
+  });
+
+  fichaDiv().innerHTML = html;
 }
 
-// ===== ATRIBUTO → ROLAGEM =====
-function rolarAtributo(nome) {
-    pericia.value = document.getElementById("attr-" + nome).value;
-    dado.value = "";
-    resultado.innerText = "";
-    trocarTela("rolagem");
+/* ===== FOTO (FUNCIONA) ===== */
+function salvarFoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const ficha = JSON.parse(localStorage.getItem("ficha_" + usuarioAtual));
+    ficha.foto = reader.result;
+    localStorage.setItem("ficha_" + usuarioAtual, JSON.stringify(ficha));
+    carregarFicha();
+  };
+  reader.readAsDataURL(file);
 }
 
-// ===== ROLAGEM (100% FIEL À TABELA) =====
+/* ===== ATRIBUTOS ===== */
+function salvarAtributo(nome, valor) {
+  const ficha = JSON.parse(localStorage.getItem("ficha_" + usuarioAtual));
+  ficha.atributos[nome] = Number(valor);
+  localStorage.setItem("ficha_" + usuarioAtual, JSON.stringify(ficha));
+}
+
+/* ===== ROLAGEM ===== */
+function abrirRolagem(valor) {
+  pericia.value = valor;
+  dado.value = "";
+  resultado.innerText = "";
+  mostrar("rolagem");
+}
+
 function rolar() {
-    const p = Number(pericia.value);
-    const d = Number(dado.value);
-    const regra = tabela[p];
+  const p = Number(pericia.value);
+  const d = Number(dado.value);
 
-    if (!regra) {
-        resultado.innerText = "Perícia inválida";
-        return;
-    }
+  if (!tabela[p] || d < 1 || d > 20) {
+    resultado.innerText = "Valores inválidos";
+    return;
+  }
 
-    if (regra.critico && d >= regra.critico)
-        resultado.innerText = "TOME CRÍTICO NOS BEISO";
-    else if (regra.bom && d >= regra.bom)
-        resultado.innerText = "Óia só, foi bom";
-    else if (d >= regra.normal)
-        resultado.innerText = "Eeeeeeeeh sucesso normal";
-    else
-        resultado.innerText = "fracasso.";
+  const r = tabela[p];
+  if (r.critico && d >= r.critico) resultado.innerText = "Sucesso Crítico";
+  else if (r.bom && d >= r.bom) resultado.innerText = "Sucesso Bom";
+  else if (d >= r.normal) resultado.innerText = "Sucesso Normal";
+  else resultado.innerText = "Fracasso";
 }
 
-// ===== TELAS =====
-function trocarTela(t) {
-    login.classList.add("oculto");
-    ficha.classList.add("oculto");
-    rolagem.classList.add("oculto");
-    document.getElementById(t).classList.remove("oculto");
+/* ===== TELAS ===== */
+function mostrar(id) {
+  ["login","ficha","rolagem"].forEach(sec =>
+    document.getElementById(sec).classList.add("hidden")
+  );
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function voltar() {
+  mostrar("ficha");
+}
+
+function fichaDiv() {
+  return document.getElementById("ficha");
 }
