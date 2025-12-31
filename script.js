@@ -7,40 +7,64 @@ const listaAtributos = [
   "Piloto de Fuga", "Pilantragem", "Poder", "Sabixão", "Sorte", "Tiro"
 ].sort();
 
+/* ---------- LOGIN ---------- */
 function login() {
   const user = usuario.value.trim();
   const pass = senha.value;
 
-  if (!user || !pass) return alert("Preencha tudo");
+  if (!user || !pass) {
+    alert("Preencha usuário e senha");
+    return;
+  }
 
-  let dados = JSON.parse(localStorage.getItem("usuarios")) || {};
-  if (!dados[user]) {
-    dados[user] = { senha: pass };
-    localStorage.setItem("usuarios", JSON.stringify(dados));
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || {};
+
+  if (!usuarios[user]) {
+    usuarios[user] = { senha: pass };
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
     const ficha = {
-      vidaAtual: 10, vidaMax: 10,
-      sanAtual: 30, sanMax: 30,
+      vidaAtual: 10,
+      vidaMax: 10,
+      sanAtual: 30,
+      sanMax: 30,
       atributos: {},
       foto: null
     };
+
     listaAtributos.forEach(a => ficha.atributos[a] = 0);
     localStorage.setItem("ficha_" + user, JSON.stringify(ficha));
-  } else if (dados[user].senha !== pass) {
-    return alert("Senha incorreta");
+  } else if (usuarios[user].senha !== pass) {
+    alert("Senha incorreta");
+    return;
   }
 
   usuarioAtual = user;
-  loginDiv().classList.add("hidden");
-  appDiv().classList.remove("hidden");
   carregarFicha();
+  mostrarTela(telaFicha);
 }
 
+/* ---------- TELAS ---------- */
+function mostrarTela(tela) {
+  telaLogin.classList.add("hidden");
+  telaFicha.classList.add("hidden");
+  telaRolagem.classList.add("hidden");
+  tela.classList.remove("hidden");
+}
+
+function irParaRolagem() {
+  mostrarTela(telaRolagem);
+}
+
+function voltarFicha() {
+  mostrarTela(telaFicha);
+}
+
+/* ---------- FICHA ---------- */
 function carregarFicha() {
   const ficha = JSON.parse(localStorage.getItem("ficha_" + usuarioAtual));
 
   nomePersonagem.textContent = usuarioAtual;
-
   fotoPerfil.src = ficha.foto || "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
   vidaAtual.value = ficha.vidaAtual;
@@ -59,7 +83,7 @@ function carregarFicha() {
       <span>${nome}</span>
       <input type="number" value="${ficha.atributos[nome]}"
         onchange="atualizarAtributo('${nome}', this.value)">
-      <button onclick="preencherRolagem(${ficha.atributos[nome]})">🎲</button>
+      <button onclick="usarAtributo(${ficha.atributos[nome]})">🎲</button>
     `;
     atributos.appendChild(div);
   });
@@ -87,10 +111,12 @@ function atualizarBarra(tipo) {
   localStorage.setItem("ficha_" + usuarioAtual, JSON.stringify(ficha));
 }
 
+/* ---------- FOTO ---------- */
 document.addEventListener("change", e => {
   if (e.target.id === "inputFoto") {
     const file = e.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = () => {
       const ficha = JSON.parse(localStorage.getItem("ficha_" + usuarioAtual));
@@ -102,14 +128,17 @@ document.addEventListener("change", e => {
   }
 });
 
-function preencherRolagem(valor) {
+/* ---------- ROLAGEM ---------- */
+function usarAtributo(valor) {
   pericia.value = valor;
+  mostrarTela(telaRolagem);
 }
 
 function rolar() {
   const p = Number(pericia.value);
   const d = Number(dado.value);
-  let r = "Fracasso";
+
+  let resultadoTexto = "Fracasso";
 
   const tabela = [
     [20, null, null],
@@ -136,12 +165,9 @@ function rolar() {
 
   const [normal, bom, crit] = tabela[p - 1] || [];
 
-  if (crit && d >= crit) r = "Crítico";
-  else if (bom && d >= bom) r = "Sucesso Bom";
-  else if (normal && d >= normal) r = "Sucesso Normal";
+  if (crit && d >= crit) resultadoTexto = "Sucesso Crítico";
+  else if (bom && d >= bom) resultadoTexto = "Sucesso Bom";
+  else if (normal && d >= normal) resultadoTexto = "Sucesso Normal";
 
-  resultado.textContent = r;
+  resultado.textContent = resultadoTexto;
 }
-
-const loginDiv = () => document.getElementById("login");
-const appDiv = () => document.getElementById("app");
