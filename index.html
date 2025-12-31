@@ -19,10 +19,10 @@
 <section id="ficha" class="oculto">
     <h2 id="nomePersonagem"></h2>
 
-    <div class="perfil">
-        <img id="foto">
-        <input type="file" id="inputFoto" accept="image/*">
-    </div>
+   <img id="fotoPerfil"
+     src="${ficha.foto || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}">
+
+<input id="inputFoto" type="file" accept="image/*">
 
     <!-- VIDA -->
     <div class="status">
