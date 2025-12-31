@@ -143,7 +143,7 @@ function rolar() {
   const p = Number(pericia.value);
   const d = Number(dado.value);
 
-  let texto = "Fracasso";
+  let texto = "fracasso.";
 
   const tabela = [
     [20, null, null],
@@ -170,9 +170,9 @@ function rolar() {
 
   const [normal, bom, crit] = tabela[p - 1] || [];
 
-  if (crit && d >= crit) texto = "Sucesso Crítico";
-  else if (bom && d >= bom) texto = "Sucesso Bom";
-  else if (normal && d >= normal) texto = "Sucesso Normal";
+  if (crit && d >= crit) texto = "POIS TOME CRÍTICO NOS BEISO";
+  else if (bom && d >= bom) texto = "óia só, foi bom";
+  else if (normal && d >= normal) texto = "eeeeeh... normal";
 
   resultado.textContent = texto;
 }
