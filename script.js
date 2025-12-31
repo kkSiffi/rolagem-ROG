@@ -8,6 +8,11 @@ const listaAtributos = [
 ].sort();
 
 /* ---------- LOGIN ---------- */
+function loginComEnter(event) {
+  event.preventDefault();
+  login();
+}
+
 function login() {
   const user = usuario.value.trim();
   const pass = senha.value;
@@ -131,13 +136,14 @@ document.addEventListener("change", e => {
 /* ---------- ROLAGEM ---------- */
 function usarAtributo(valor) {
   pericia.value = valor;
+  mostrarTela(telaRolagem);
 }
 
 function rolar() {
   const p = Number(pericia.value);
   const d = Number(dado.value);
 
-  let resultadoTexto = "fracasso...";
+  let texto = "Fracasso";
 
   const tabela = [
     [20, null, null],
@@ -164,9 +170,9 @@ function rolar() {
 
   const [normal, bom, crit] = tabela[p - 1] || [];
 
-  if (crit && d >= crit) resultadoTexto = "POIS TOME ESSE CRÍTICO NOS BEISO";
-  else if (bom && d >= bom) resultadoTexto = "óia só, foi bom";
-  else if (normal && d >= normal) resultadoTexto = "eeeeeeeh, normal né";
+  if (crit && d >= crit) texto = "Sucesso Crítico";
+  else if (bom && d >= bom) texto = "Sucesso Bom";
+  else if (normal && d >= normal) texto = "Sucesso Normal";
 
-  resultado.textContent = resultadoTexto;
+  resultado.textContent = texto;
 }
