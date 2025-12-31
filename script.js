@@ -47,6 +47,8 @@ function loginUsuario() {
     nomePersonagem.innerText = usuario.value;
     trocarTela("ficha");
     carregarFicha();
+    function login(event) {
+  event.preventDefault(); 
 }
 
 // ===== FICHA =====
