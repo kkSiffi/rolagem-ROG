@@ -4,6 +4,8 @@ body {
   color: #fff;
   margin: 0;
   padding: 10px;
+  max-width: 420px;
+  margin: auto;
 }
 
 .hidden {
@@ -17,6 +19,11 @@ input, button {
 
 button {
   cursor: pointer;
+}
+
+.perfil {
+  text-align: center;
+  margin: 10px 0;
 }
 
 .perfil img {
@@ -55,14 +62,18 @@ button {
 .atributo {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
   margin: 4px 0;
 }
 
-.atributo input {
-  width: 50px;
+.atributo span {
+  flex: 1;
 }
 
-.rolagem {
-  margin-top: 10px;
+.atributo input {
+  width: 45px;
+}
+
+.atributo button {
+  width: 32px;
 }
