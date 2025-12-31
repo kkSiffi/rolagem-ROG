@@ -12,7 +12,28 @@
     <h2>Login</h2>
     <input id="usuario" placeholder="Usuário">
     <input id="senha" type="password" placeholder="Senha">
-    <button id="btnLogin">Entrar / Criar</button>
+    function salvarFoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const ficha = JSON.parse(
+      localStorage.getItem("ficha_" + usuarioAtual)
+    );
+
+    ficha.foto = reader.result;
+    localStorage.setItem(
+      "ficha_" + usuarioAtual,
+      JSON.stringify(ficha)
+    );
+
+    // atualiza só a imagem
+    document.getElementById("fotoPerfil").src = reader.result;
+  };
+
+  reader.readAsDataURL(file);
+}
     <p id="loginErro"></p>
 </section>
 
