@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ficha RPG</title>
+  <title>Ficha ROG</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- TELA LOGIN -->
 <div id="telaLogin">
-  <h2>Login</h2>
-  <input id="usuario" placeholder="Usuário">
-  <input id="senha" type="password" placeholder="Senha">
-  <button type="button" onclick="login()">Criar / Entrar</button>
+  <form onsubmit="loginComEnter(event)">
+    <h2>Login</h2>
+    <input id="usuario" placeholder="Usuário">
+    <input id="senha" type="password" placeholder="Senha">
+    <button type="submit">Criar / Entrar</button>
+  </form>
 </div>
 
 <!-- TELA FICHA -->
@@ -52,7 +54,7 @@
   <h3>Atributos</h3>
   <div id="atributos"></div>
 
-  <button onclick="irParaRolagem()">Ir para Rolagem 🎲</button>
+  <button onclick="irParaRolagem()">Ir para Rolagem</button>
 </div>
 
 <!-- TELA ROLAGEM -->
@@ -60,6 +62,9 @@
   <h3>Rolagem</h3>
 
   <input id="pericia" type="number" placeholder="Perícia">
+  <input id="dado" type="number" placeholder="Dado (1–20)">
+  <button onclick="rolar()">Rolar</button>
+
   <p id="resultado"></p>
 
   <button onclick="voltarFicha()">Voltar para Ficha</button>
