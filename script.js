@@ -131,20 +131,13 @@ document.addEventListener("change", e => {
 /* ---------- ROLAGEM ---------- */
 function usarAtributo(valor) {
   pericia.value = valor;
-
-  // rola o dado automaticamente (1–20)
-  const dadoRolado = Math.floor(Math.random() * 20) + 1;
-  dado.value = dadoRolado;
-
-  mostrarTela(telaRolagem);
-  rolar(); // já calcula o resultado
 }
 
 function rolar() {
   const p = Number(pericia.value);
   const d = Number(dado.value);
 
-  let resultadoTexto = "Fracasso";
+  let resultadoTexto = "fracasso...";
 
   const tabela = [
     [20, null, null],
@@ -171,9 +164,9 @@ function rolar() {
 
   const [normal, bom, crit] = tabela[p - 1] || [];
 
-  if (crit && d >= crit) resultadoTexto = "Sucesso Crítico";
-  else if (bom && d >= bom) resultadoTexto = "Sucesso Bom";
-  else if (normal && d >= normal) resultadoTexto = "Sucesso Normal";
+  if (crit && d >= crit) resultadoTexto = "POIS TOME ESSE CRÍTICO NOS BEISO";
+  else if (bom && d >= bom) resultadoTexto = "óia só, foi bom";
+  else if (normal && d >= normal) resultadoTexto = "eeeeeeeh, normal né";
 
   resultado.textContent = resultadoTexto;
 }
