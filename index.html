@@ -1,107 +1,70 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>ROG</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficha RPG</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<section id="login">
-    <h2>Login</h2>
-    <input id="usuario" placeholder="Usuário">
-    <input id="senha" type="password" placeholder="Senha">
-    function salvarFoto(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+<!-- LOGIN -->
+<div id="login">
+  <h2>Login</h2>
+  <input id="usuario" placeholder="Usuário">
+  <input id="senha" type="password" placeholder="Senha">
+  <button type="button" onclick="login()">Criar / Entrar</button>
+</div>
 
-  const reader = new FileReader();
-  reader.onload = () => {
-    const ficha = JSON.parse(
-      localStorage.getItem("ficha_" + usuarioAtual)
-    );
+<!-- APP -->
+<div id="app" class="hidden">
 
-    ficha.foto = reader.result;
-    localStorage.setItem(
-      "ficha_" + usuarioAtual,
-      JSON.stringify(ficha)
-    );
+  <h2 id="nomePersonagem"></h2>
 
-    // atualiza só a imagem
-    document.getElementById("fotoPerfil").src = reader.result;
-  };
+  <!-- PERFIL -->
+  <div class="perfil">
+    <label for="inputFoto">
+      <img id="fotoPerfil" title="Clique para trocar a foto">
+    </label>
+    <input id="inputFoto" type="file" accept="image/*" hidden>
+  </div>
 
-  reader.readAsDataURL(file);
-}
-    <p id="loginErro"></p>
-</section>
-
-<section id="ficha" class="oculto">
-    <h2 id="nomePersonagem"></h2>
-
-   <img id="fotoPerfil"
-     src="${ficha.foto || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}">
-
-<input id="inputFoto" type="file" accept="image/*">
-
-    <!-- VIDA -->
-    <div class="status">
-        <label>Vida</label>
-        <div class="barra-container">
-            <div class="barra vida" id="barraVida"></div>
-        </div>
-        <input id="vidaAtual" type="number" class="input-mini"> /
-        <input id="vidaMax" type="number" class="input-mini">
+  <!-- VIDA -->
+  <div class="barra">
+    <span>Vida</span>
+    <input type="number" id="vidaAtual" onchange="atualizarBarra('vida')">
+    /
+    <input type="number" id="vidaMax" onchange="atualizarBarra('vida')">
+    <div class="barra-externa">
+      <div id="vidaBarra" class="barra-interna vida"></div>
     </div>
+  </div>
 
-    <!-- SANIDADE -->
-    <div class="status">
-        <label>Sanidade</label>
-        <div class="barra-container">
-            <div class="barra sanidade" id="barraSanidade"></div>
-        </div>
-        <input id="sanidadeAtual" type="number" class="input-mini"> /
-        <input id="sanidadeMax" type="number" class="input-mini">
+  <!-- SANIDADE -->
+  <div class="barra">
+    <span>Sanidade</span>
+    <input type="number" id="sanAtual" onchange="atualizarBarra('san')">
+    /
+    <input type="number" id="sanMax" onchange="atualizarBarra('san')">
+    <div class="barra-externa">
+      <div id="sanBarra" class="barra-interna sanidade"></div>
     </div>
+  </div>
 
-    <h3>Atributos</h3>
+  <!-- ATRIBUTOS -->
+  <h3>Atributos</h3>
+  <div id="atributos"></div>
 
-    <div class="atributos">
-        <div><span>Acrobacia</span><input id="attr-acrobacia" type="number" class="input-mini"><button onclick="rolarAtributo('acrobacia')">🎲</button></div>
-        <div><span>Briga</span><input id="attr-briga" type="number" class="input-mini"><button onclick="rolarAtributo('briga')">🎲</button></div>
-        <div><span>Charme</span><input id="attr-charme" type="number" class="input-mini"><button onclick="rolarAtributo('charme')">🎲</button></div>
-        <div><span>Corte Rápido</span><input id="attr-corte" type="number" class="input-mini"><button onclick="rolarAtributo('corte')">🎲</button></div>
-        <div><span>Duro na Queda</span><input id="attr-duro" type="number" class="input-mini"><button onclick="rolarAtributo('duro')">🎲</button></div>
-        <div><span>Encontrar</span><input id="attr-encontrar" type="number" class="input-mini"><button onclick="rolarAtributo('encontrar')">🎲</button></div>
-        <div><span>Escola</span><input id="attr-escola" type="number" class="input-mini"><button onclick="rolarAtributo('escola')">🎲</button></div>
-        <div><span>Esconder</span><input id="attr-esconder" type="number" class="input-mini"><button onclick="rolarAtributo('esconder')">🎲</button></div>
-        <div><span>Esperteza</span><input id="attr-esperteza" type="number" class="input-mini"><button onclick="rolarAtributo('esperteza')">🎲</button></div>
-        <div><span>Estilo</span><input id="attr-estilo" type="number" class="input-mini"><button onclick="rolarAtributo('estilo')">🎲</button></div>
-        <div><span>Força</span><input id="attr-forca" type="number" class="input-mini"><button onclick="rolarAtributo('forca')">🎲</button></div>
-        <div><span>Habilidade</span><input id="attr-habilidade" type="number" class="input-mini"><button onclick="rolarAtributo('habilidade')">🎲</button></div>
-        <div><span>Intuição</span><input id="attr-intuicao" type="number" class="input-mini"><button onclick="rolarAtributo('intuicao')">🎲</button></div>
-        <div><span>Malandragem</span><input id="attr-malandragem" type="number" class="input-mini"><button onclick="rolarAtributo('malandragem')">🎲</button></div>
-        <div><span>Medicina</span><input id="attr-medicina" type="number" class="input-mini"><button onclick="rolarAtributo('medicina')">🎲</button></div>
-        <div><span>Pilantragem</span><input id="attr-pilantragem" type="number" class="input-mini"><button onclick="rolarAtributo('pilantragem')">🎲</button></div>
-        <div><span>Piloto de Fuga</span><input id="attr-piloto" type="number" class="input-mini"><button onclick="rolarAtributo('piloto')">🎲</button></div>
-        <div><span>Poder</span><input id="attr-poder" type="number" class="input-mini"><button onclick="rolarAtributo('poder')">🎲</button></div>
-        <div><span>Sabixão</span><input id="attr-sabixao" type="number" class="input-mini"><button onclick="rolarAtributo('sabixao')">🎲</button></div>
-        <div><span>Sorte</span><input id="attr-sorte" type="number" class="input-mini"><button onclick="rolarAtributo('sorte')">🎲</button></div>
-        <div><span>Tiro</span><input id="attr-tiro" type="number" class="input-mini"><button onclick="rolarAtributo('tiro')">🎲</button></div>
-    </div>
-</section>
-
-<section id="rolagem" class="oculto">
-    <h2>Rolagem</h2>
-    <label>Perícia</label>
-    <input id="pericia" type="number" class="input-mini">
-    <label>Dado</label>
-    <input id="dado" type="number" class="input-mini">
+  <!-- ROLAGEM -->
+  <h3>Rolagem</h3>
+  <div class="rolagem">
+    <input id="pericia" type="number" placeholder="Perícia">
+    <input id="dado" type="number" placeholder="Dado (1-20)">
     <button onclick="rolar()">Rolar</button>
-    <h3 id="resultado"></h3>
-    <button onclick="trocarTela('ficha')">Voltar</button>
-</section>
+    <p id="resultado"></p>
+  </div>
+
+</div>
 
 <script src="script.js"></script>
 </body>
