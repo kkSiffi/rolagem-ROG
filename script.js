@@ -128,4 +128,8 @@ function trocarTela(t) {
     ficha.classList.add("oculto");
     rolagem.classList.add("oculto");
     document.getElementById(t).classList.remove("oculto");
-}
+    document.addEventListener("change", function (e) {
+  if (e.target && e.target.id === "inputFoto") {
+    salvarFoto(e);
+  }
+});
